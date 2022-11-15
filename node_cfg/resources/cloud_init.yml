@@ -1,0 +1,23 @@
+#cloud-config
+preserve_hostname: false
+hostname: ${hostname}
+ssh_pwauth: true
+disable_root: false
+
+users:
+  - name: ${ssh_user}
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    home: /home/${ssh_user}
+    shell: /bin/bash
+    lock_passwd: false
+
+chpasswd:
+  expire: false
+  users:
+    - name: root
+      password: pass
+      type: text
+    - name: ${ssh_user}
+      password: ${ssh_pass}
+      type: text
