@@ -16,10 +16,42 @@ Requirements:
 
 ## Usage
 
+You have two options how to use this repo.
+
+### By cloning
+
 1. Clone this repo somewhere.
 2. Run `terraform init`
 3. You're ready to go.
 
+### By using as the dependency
+
+Create a new terraform project.
+Add a file with contents like this:
+
+```terraform
+terraform {
+  required_providers {
+    local = {
+      source  = "hashicorp/local"
+      version = "2.2.3"
+    }
+  }
+}
+
+module "mymod" {
+  source = "git::https://github.com/s3rius/terraform-libvirt-kube"
+
+  libvirt_uri = "qemu:///system"
+}
+
+resource "local_file" "inventory_out" {
+  content  = module.mymod.inventory
+  filename = "${path.module}/inventory.ini"
+}
+```
+
+Run `terraform init` and `terraform apply`.
 
 ## Configuration
 
