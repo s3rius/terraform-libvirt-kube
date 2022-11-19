@@ -54,7 +54,7 @@ variable "libvirt_uri" {
 }
 
 variable "node_volume_size" {
-  description = "Size of a volume of one node"
+  description = "Size of a node's volume"
   type        = number
   default     = 5000000000
 }
@@ -85,9 +85,9 @@ variable "masters_vcpus" {
 }
 
 variable "masters_memory" {
-  descrition = "Master node memory in MB"
-  type       = string
-  default    = "2048"
+  description = "Master node memory in MB"
+  type        = string
+  default     = "2048"
 }
 
 
@@ -98,7 +98,7 @@ variable "worker_vcpus" {
 }
 
 variable "worker_memory" {
-  descrition = "Worker node memory in MB"
-  type       = string
-  default    = "2048"
+  description = "Worker node memory in MB"
+  type        = string
+  default     = "2048"
 }
