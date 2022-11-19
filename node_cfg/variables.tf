@@ -44,13 +44,10 @@ variable "node_index" {
 
 variable "vcpus" {
   description = "Number of virtual cpus for node"
-}
-
-
-variable "vcpus" {
-  description = "Number of virtual cpus for node"
+  type        = number
 }
 
 variable "memory" {
-  descrition = "Node memory in MB"
+  description = "Node memory in bytes"
+  type        = number
 }
