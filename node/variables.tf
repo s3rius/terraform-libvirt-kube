@@ -54,3 +54,39 @@ variable "ssh_authorized_keys" {
   description = "Authorized ssh keys"
   type        = list(string)
 }
+
+variable "ssh_pass_auth" {
+  description = "Wether to use password auth"
+  type        = bool
+}
+
+variable "packages" {
+  description = "List of packages to install"
+  type        = list(string)
+}
+
+variable "package_update" {
+  description = "Wether to update packages"
+  type        = bool
+}
+
+variable "package_upgrade" {
+  description = "Wether to upgrade packages"
+  type        = bool
+}
+
+variable "run_commands" {
+  description = "List of commands to run"
+  type        = list(any)
+}
+
+variable "extra_files" {
+  description = "Extra files to create"
+  type = map(object({
+    owner       = optional(string)
+    permissions = optional(string)
+    encoding    = optional(string)
+    content     = string
+  }))
+  default = {}
+}

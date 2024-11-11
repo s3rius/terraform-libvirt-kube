@@ -4,6 +4,16 @@ hostname: ${hostname}
 ssh_pwauth: true
 disable_root: false
 
+package_update: ${package_update}
+package_upgrade: ${package_upgrade}
+packages:
+%{ for package in packages ~}
+- "${package}"
+%{ endfor ~}
+
+${yamlencode(runcmd)}
+${yamlencode(write_files)}
+
 users:
   - name: ${ssh_user}
     sudo: ALL=(ALL) NOPASSWD:ALL

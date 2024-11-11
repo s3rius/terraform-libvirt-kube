@@ -26,6 +26,16 @@ module "nodes" {
   vcpus    = each.value.vcpus
   memory   = each.value.memory
 
+  package_update  = each.value.package_update
+  package_upgrade = each.value.package_update
+  packages        = each.value.packages
+
+  extra_files = each.value.extra_files
+
+  run_commands = each.value.run_commands
+
+  ssh_pass_auth = each.value.ssh_pass_auth != null ? each.value.ssh_pass_auth : var.ssh_pass_auth
+
   ssh_username        = var.ssh_username
   ssh_password        = var.ssh_password
   ssh_authorized_keys = var.ssh_authorized_keys
