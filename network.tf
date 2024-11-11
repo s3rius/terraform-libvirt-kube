@@ -1,4 +1,5 @@
 resource "libvirt_network" "kube_network" {
+
   # the name used by libvirt
   name = var.network_name
 
@@ -6,14 +7,14 @@ resource "libvirt_network" "kube_network" {
   mode = "nat"
 
   #  the domain used by the DNS server in this network
-  domain = "k8s.local"
+  domain = var.base_domain
 
   autostart = true
 
   # list of subnets the addresses allowed for domains connected
   # also derived to define the host addresses
   # also derived to define the addresses served by the DHCP server
-  addresses = ["10.17.0.0/24"]
+  addresses = var.netork_addresses
 
   # (optional) the bridge device defines the name of a bridge device
   # which will be used to construct the virtual network.
@@ -26,37 +27,38 @@ resource "libvirt_network" "kube_network" {
 
   # (Optional) DNS configuration
   dns {
-    # (Optional, default false)
-    # Set to true, if no other option is specified and you still want to 
-    # enable dns.
-    enabled = true
-    # (Optional, default false)
-    # true: DNS requests under this domain will only be resolved by the
-    # virtual network's own DNS server
-    # false: Unresolved requests will be forwarded to the host's
-    # upstream DNS server if the virtual network's DNS server does not
-    # have an answer.
-    local_only = true
+    enabled    = true
+    local_only = false
 
-    # (Optional) one or more DNS forwarder entries.  One or both of
-    # "address" and "domain" must be specified.  The format is:
-    # forwarders {
-    #     address = "my address"
-    #     domain = "my domain"
-    #  } 
-    # 
+    # For each node that has an ip defined
+    # create a dns record with the hostname.
+    dynamic "hosts" {
+      for_each = toset([for node in var.nodes : node if node["ip"] != null])
+      iterator = node
 
-    # (Optional) one or more DNS host entries.  Both of
-    # "ip" and "hostname" must be specified.  The format is:
-    # hosts  {
-    #     hostname = "my_hostname"
-    #     ip = "my.ip.address.1"
-    #   }
-    # hosts {
-    #     hostname = "my_hostname"
-    #     ip = "my.ip.address.2"
-    #   }
-    #
+      content {
+        hostname = "${node.value.hostname}.${var.base_domain}"
+        ip       = node.value.ip
+      }
+    }
+
+    # Extra hosts configuration.
+    # This block will iterate over all hosts
+    # that have had extra_hosts and ips and will
+    # create dns records for them.
+    dynamic "hosts" {
+      for_each = flatten(
+        [
+          for node in var.nodes : [for host in node["extra_hosts"] : { "host" : host, "ip" : node["ip"] }]
+          if length(node["extra_hosts"]) > 0 && node["ip"] != null
+        ]
+      )
+      iterator = extra_host
+
+      content {
+        hostname = extra_host.value.host
+        ip       = extra_host.value.ip
+      }
+    }
   }
-
 }

@@ -14,15 +14,20 @@ variable "os_base_volume" {
 }
 
 variable "vol_size" {
-  description = "Size of a volume in bytes"
+  description = "Size of a volume in GB"
   type        = number
 }
 
-
-variable "node_name_prefix" {
+variable "hostname" {
   description = "master vm hostname"
   default     = "node"
   type        = string
+}
+
+variable "ip" {
+  description = "Node's IP"
+  type        = string
+  default     = null
 }
 
 variable "ssh_username" {
@@ -35,13 +40,6 @@ variable "ssh_password" {
   type        = string
 }
 
-
-variable "node_index" {
-  description = "ID of a node"
-  type        = string
-}
-
-
 variable "vcpus" {
   description = "Number of virtual cpus for node"
   type        = number
@@ -50,4 +48,9 @@ variable "vcpus" {
 variable "memory" {
   description = "Node memory in bytes"
   type        = number
+}
+
+variable "ssh_authorized_keys" {
+  description = "Authorized ssh keys"
+  type        = list(string)
 }

@@ -1,33 +1,45 @@
-# Terraform libvirt multimaster
+# Terraform libvirt helper
 
-What's this? This is a repo, that can help you
-deploy multiple nodes in your qemu daemon, using terraform?
+This repo will help you to create multiple nodes using libvirt and will bind it them the one network.
 
-When should I use it? Well, if you're a devOps engineer and
-sometimes you want to test your ansible scripts, then this is 
-a good fit for you.
+Requires:
+* terraform >= 0.12.6
+* libvirt
+* qemu
+* dnsmasq
 
-Requirements:
-- terraform >= 0.12.6
-- libvirt
-- qemu
-- dnsmasq
+For archlinux users:
 
+```bash
+pacman -S terraform libvirt qemu-full dnsmasq
+```
 
-## Usage
+# Usage
 
 You have two options how to use this repo.
 
-### By cloning
+1. Clone it;
+2. Use as a dependency.
 
-1. Clone this repo somewhere.
-2. Run `terraform init`
-3. You're ready to go.
+For the fist option it's faily straightforward. 
 
-### By using as the dependency
+```bash
+git clone https://github.com/s3rius/terraform-libvirt-kube.git
+cd terraform-libvirt-kube
+terraform init
+# Use this file to supply additional parameters.
+touch vars.tfvars
 
-Create a new terraform project.
-Add a file with contents like this:
+terraform apply -var-file vars.tfvars
+```
+
+The second option is almost as simple as the first one, but requires a separate tf project.
+
+```
+touch main.tf
+```
+
+Put this inside the `main.tf` file
 
 ```terraform
 terraform {
@@ -44,32 +56,49 @@ module "mymod" {
 
   libvirt_uri = "qemu:///system"
 }
-
-resource "local_file" "inventory_out" {
-  content  = module.mymod.inventory
-  filename = "${path.module}/inventory.ini"
-}
 ```
 
-Run `terraform init` and `terraform apply`.
+Run `tf init` and then you can run `tf apply` as usual.
 
-## Configuration
+### Configuration
 
+You can lookup all project variables in [variables.tf](https://github.com/s3rius/terraform-libvirt-kube/blob/master/variables.tf).
 
-This project has a lot of variables, and all of them can be found in [variables.tf](./variables.tf) file.
+Here's a samle config:
 
+```terraform
+libvirt_uri = "qemu:///system"
 
-I prefer using .tfvars files.
+base_domain      = "kube.local"
+netork_addresses = ["10.17.0.0/24"]
 
+# You can speedup booting by creating VMs from a downloaded img.
+os_image = "/home/s3rius/imgs/ubuntu-22.04-server-cloudimg-amd64-disk-kvm.img"
+ssh_authorized_keys = [
+  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AACCIGyxBPmyfXSMl5MSk5ff1pX43GULHpHandCb32P4nMid meme@example.com",
+]
+
+nodes = [
+  {
+    hostname    = "lb"           # Name of a node
+    ip          = "10.17.0.10"   # IP of a node
+    extra_hosts = ["kube.local"] # Additional hosts
+    memory      = 2048           # In MB
+    vcpus       = 2              # In CPUs
+    vol_size    = 5              # In GB
+  },
+  {
+    hostname = "m1"
+    ip       = "10.17.0.11"
+  },
+  {
+    hostname = "m2"
+    ip       = "10.17.0.12"
+  },
+  {
+    hostname = "m3"
+    ip       = "10.17.0.13"
+  },
+]
 ```
-os_image="/home/user/ubuntu-22.10-server-cloudimg-amd64-disk-kvm.img"
 
-num_of_workers=3
-num_of_masters=3
-
-ssh_username=test
-ssh_password=test
-
-masters_memory=4096
-worker_memory=2048
-```

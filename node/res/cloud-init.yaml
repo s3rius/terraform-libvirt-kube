@@ -11,6 +11,11 @@ users:
     home: /home/${ssh_user}
     shell: /bin/bash
     lock_passwd: false
+    ssh_authorized_keys:
+    %{ for key in ssh_authorized_keys ~}
+    - "${key}"
+    %{ endfor ~}
+
 
 chpasswd:
   expire: false
