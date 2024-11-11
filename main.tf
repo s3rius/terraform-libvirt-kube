@@ -13,19 +13,20 @@ resource "libvirt_volume" "base_os_vol" {
 
 
 module "nodes" {
-  source     = "./node"
-  depends_on = [libvirt_pool.kube_pool]
-  for_each   = { for idx, node in var.nodes : idx => node }
+  source   = "./node"
+  for_each = { for idx, node in var.nodes : node.hostname => node }
 
-  os_base_volume      = var.base_os_vol_name
-  ip                  = each.value.ip
-  hostname            = each.value.hostname
-  vol_size            = each.value.vol_size
+  pool_name      = libvirt_pool.kube_pool.name
+  network_name   = libvirt_network.kube_network.name
+  os_base_volume = libvirt_volume.base_os_vol.id
+
+  ip       = each.value.ip
+  hostname = each.value.hostname
+  vol_size = each.value.vol_size
+  vcpus    = each.value.vcpus
+  memory   = each.value.memory
+
   ssh_username        = var.ssh_username
   ssh_password        = var.ssh_password
-  vcpus               = each.value.vcpus
-  memory              = each.value.memory
   ssh_authorized_keys = var.ssh_authorized_keys
-  network_name        = var.network_name
-  pool_name           = libvirt_pool.kube_pool.name
 }

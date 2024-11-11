@@ -29,7 +29,7 @@ resource "libvirt_domain" "node-domain" {
     network_name   = var.network_name
     wait_for_lease = true
     hostname       = var.hostname
-    addresses      = var.ip != null ? [var.ip] : []
+    addresses      = var.ip != null ? [var.ip] : null
   }
 
   console {

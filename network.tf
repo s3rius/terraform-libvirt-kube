@@ -1,4 +1,5 @@
 resource "libvirt_network" "kube_network" {
+
   # the name used by libvirt
   name = var.network_name
 
@@ -26,26 +27,11 @@ resource "libvirt_network" "kube_network" {
 
   # (Optional) DNS configuration
   dns {
-    # (Optional, default false)
-    # Set to true, if no other option is specified and you still want to 
-    # enable dns.
-    enabled = true
-    # (Optional, default false)
-    # true: DNS requests under this domain will only be resolved by the
-    # virtual network's own DNS server
-    # false: Unresolved requests will be forwarded to the host's
-    # upstream DNS server if the virtual network's DNS server does not
-    # have an answer.
+    enabled    = true
     local_only = false
 
-    # (Optional) one or more DNS forwarder entries.  One or both of
-    # "address" and "domain" must be specified.  The format is:
-    # forwarders {
-    #     address = "my address"
-    #     domain = "my domain"
-    #  } 
-    #
-
+    # For each node that has an ip defined
+    # create a dns record with the hostname.
     dynamic "hosts" {
       for_each = toset([for node in var.nodes : node if node["ip"] != null])
       iterator = node
@@ -53,6 +39,25 @@ resource "libvirt_network" "kube_network" {
       content {
         hostname = "${node.value.hostname}.${var.base_domain}"
         ip       = node.value.ip
+      }
+    }
+
+    # Extra hosts configuration.
+    # This block will iterate over all hosts
+    # that have had extra_hosts and ips and will
+    # create dns records for them.
+    dynamic "hosts" {
+      for_each = flatten(
+        [
+          for node in var.nodes : [for host in node["extra_hosts"] : { "host" : host, "ip" : node["ip"] }]
+          if length(node["extra_hosts"]) > 0 && node["ip"] != null
+        ]
+      )
+      iterator = extra_host
+
+      content {
+        hostname = extra_host.value.host
+        ip       = extra_host.value.ip
       }
     }
   }

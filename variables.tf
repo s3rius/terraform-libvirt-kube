@@ -28,31 +28,39 @@ variable "os_image" {
 }
 
 variable "network_name" {
-  description = "Name of the network"
+  description = "Name of the virtual network"
   type        = string
   default     = "kube_network"
 }
 
 variable "base_domain" {
-  description = "Base domain for the network"
+  description = "Base domain name for the network"
   type        = string
   default     = "k8s.local"
 }
 
 variable "netork_addresses" {
-  description = "Network addresses"
+  description = "List of possible network addresses (can be CIDRs)"
   type        = list(string)
   default     = ["10.17.0.0/24"]
+}
+
+variable "dns_local_only" {
+  description = "Wether to use local for virtual network dns only."
+  type        = bool
+  default     = false
 }
 
 variable "nodes" {
   description = "Nodes config"
   type = list(object({
-    hostname = string
-    vcpus    = optional(number, 1)
-    memory   = optional(number, 1024)
-    vol_size = optional(number, 4)
-    ip       = optional(string)
+    hostname    = string                     # Hostname of the node.
+    vcpus       = optional(number, 1)        # Number of virtual CPUs
+    memory      = optional(number, 1024)     # Memory in MB
+    vol_size    = optional(number, 4)        # Volume size in GB
+    ip          = optional(string)           # Optional IP address. If not set, DHCP will be used to assign an IP.
+    extra_hosts = optional(list(string), []) # Additional hosts to add to the DNS server.
+
   }))
 
   default = [{ hostname = "node1" }]
