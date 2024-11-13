@@ -25,6 +25,8 @@ module "nodes" {
   vol_size = each.value.vol_size
   vcpus    = each.value.vcpus
   memory   = each.value.memory
+  cpu_mode = each.value.cpu_mode
+  cpu_arch = each.value.arch
 
   package_update  = each.value.package_update
   package_upgrade = each.value.package_update

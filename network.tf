@@ -14,7 +14,7 @@ resource "libvirt_network" "kube_network" {
   # list of subnets the addresses allowed for domains connected
   # also derived to define the host addresses
   # also derived to define the addresses served by the DHCP server
-  addresses = var.netork_addresses
+  addresses = var.network_addresses
 
   # (optional) the bridge device defines the name of a bridge device
   # which will be used to construct the virtual network.

@@ -70,7 +70,7 @@ Here's a samle config:
 libvirt_uri = "qemu:///system"
 
 base_domain      = "kube.local"
-netork_addresses = ["10.17.0.0/24"]
+network_addresses = ["10.17.0.0/24"]
 
 # You can speedup booting by creating VMs from a downloaded img.
 os_image = "/home/s3rius/imgs/ubuntu-22.04-server-cloudimg-amd64-disk-kvm.img"

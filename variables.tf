@@ -39,7 +39,7 @@ variable "base_domain" {
   default     = "k8s.local"
 }
 
-variable "netork_addresses" {
+variable "network_addresses" {
   description = "List of possible network addresses (can be CIDRs)"
   type        = list(string)
   default     = ["10.17.0.0/24"]
