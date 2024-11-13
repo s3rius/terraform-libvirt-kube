@@ -22,6 +22,11 @@ resource "libvirt_domain" "node-domain" {
   memory = var.memory
   vcpu   = var.vcpus
 
+  cpu {
+    mode = var.cpu_mode
+  }
+  arch = var.cpu_arch
+
   cloudinit = libvirt_cloudinit_disk.commoninit.id
 
   network_interface {

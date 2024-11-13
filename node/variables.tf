@@ -90,3 +90,15 @@ variable "extra_files" {
   }))
   default = {}
 }
+
+variable "cpu_mode" {
+  description = "CPU configuration of a machine"
+  type        = string
+  nullable    = true
+}
+
+variable "cpu_arch" {
+  description = "Architecture of the CPU"
+  type        = string
+  default     = "x86_64"
+}

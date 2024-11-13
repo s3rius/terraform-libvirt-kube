@@ -66,6 +66,8 @@ variable "nodes" {
     package_upgrade = optional(bool, false)            # Run package upgrade on startup
     service_enable  = optional(list(string), [])       # Services to enable on startup
     run_commands    = optional(list(list(string)), []) # Commands to run on fist startup
+    cpu_mode        = optional(string)                 # CPU configuration of a machine
+    arch            = optional(string)                 # Architecture of the machine (same as host by default)
     extra_files = optional(map(object({                # Map of extra files to create on startup
       owner       = optional(string, null)
       permissions = optional(string, "0644")
