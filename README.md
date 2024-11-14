@@ -42,19 +42,11 @@ touch main.tf
 Put this inside the `main.tf` file
 
 ```terraform
-terraform {
-  required_providers {
-    local = {
-      source  = "hashicorp/local"
-      version = "2.2.3"
-    }
-  }
-}
-
 module "mymod" {
   source = "git::https://github.com/s3rius/terraform-libvirt-kube"
 
   libvirt_uri = "qemu:///system"
+  # Your variables go here...
 }
 ```
 
