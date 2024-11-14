@@ -4,7 +4,16 @@ resource "libvirt_network" "kube_network" {
   name = var.network_name
 
   # mode can be: "nat" (default), "none", "route", "open", "bridge"
-  mode = "nat"
+  mode = var.network_type
+
+  # (optional) the bridge device defines the name of a bridge device
+  # which will be used to construct the virtual network.
+  # (only necessary in "bridge" mode)
+  bridge = var.network_bridge
+
+  # (optional) the MTU for the network. If not supplied, the underlying device's
+  # default is used (usually 1500)
+  mtu = var.network_mtu
 
   #  the domain used by the DNS server in this network
   domain = var.base_domain
@@ -15,15 +24,6 @@ resource "libvirt_network" "kube_network" {
   # also derived to define the host addresses
   # also derived to define the addresses served by the DHCP server
   addresses = var.network_addresses
-
-  # (optional) the bridge device defines the name of a bridge device
-  # which will be used to construct the virtual network.
-  # (only necessary in "bridge" mode)
-  # bridge = "br7"
-
-  # (optional) the MTU for the network. If not supplied, the underlying device's
-  # default is used (usually 1500)
-  # mtu = 9000
 
   # (Optional) DNS configuration
   dns {

@@ -45,6 +45,24 @@ variable "network_addresses" {
   default     = ["10.17.0.0/24"]
 }
 
+variable "network_type" {
+  description = "Type of network to create"
+  type        = string
+  default     = "nat"
+}
+
+variable "network_bridge" {
+  description = "Bridge to use for network"
+  type        = string
+  default     = null
+}
+
+variable "network_mtu" {
+  description = "MTU for the network"
+  type        = number
+  default     = 1500
+}
+
 variable "dns_local_only" {
   description = "Wether to use local for virtual network dns only."
   type        = bool
