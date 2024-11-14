@@ -60,7 +60,7 @@ variable "network_bridge" {
 variable "network_mtu" {
   description = "MTU for the network"
   type        = number
-  default     = 1500
+  default     = null
 }
 
 variable "dns_local_only" {
