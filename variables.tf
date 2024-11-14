@@ -34,9 +34,9 @@ variable "network_name" {
 }
 
 variable "base_domain" {
-  description = "Base domain name for the network"
+  description = "Base domain name for the network (not supported by Bridges)"
   type        = string
-  default     = "k8s.local"
+  default     = null
 }
 
 variable "network_addresses" {

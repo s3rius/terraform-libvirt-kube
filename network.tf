@@ -33,7 +33,7 @@ resource "libvirt_network" "kube_network" {
     # For each node that has an ip defined
     # create a dns record with the hostname.
     dynamic "hosts" {
-      for_each = toset([for node in var.nodes : node if node["ip"] != null])
+      for_each = toset([for node in var.nodes : node if node["ip"] != null && var.base_domain != null])
       iterator = node
 
       content {
